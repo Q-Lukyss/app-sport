@@ -11,12 +11,13 @@
 
 // @host localhost:8020
 // @BasePath /
-
 package main
 
 import (
 	"app-sport/config"
 	"app-sport/docs"
+	"app-sport/models"
+	"app-sport/routes"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -27,6 +28,11 @@ import (
 func main() {
 	config.LoadEnv()
 	config.ConnectDB()
+
+	err := config.DB.AutoMigrate(&models.Poids{})
+	if err != nil {
+		log.Println("Une erreur de Migration s'est produite")
+	}
 
 	r := gin.Default()
 
@@ -41,6 +47,9 @@ func main() {
 	// Swagger setup
 	docs.SwaggerInfo.BasePath = "/"
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	// Toutes tes routes API (comme /poids)
+	routes.SetupRoutes(r)
 
 	r.Run(":8020")
 }
