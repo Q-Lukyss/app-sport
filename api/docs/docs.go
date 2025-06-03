@@ -23,6 +23,222 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/exercices": {
+            "get": {
+                "description": "Retourne tous les exercices disponibles",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercices"
+                ],
+                "summary": "Liste des exercices",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Exercice"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Ajoute un nouvel exercice dans la base",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercices"
+                ],
+                "summary": "Créer un exercice",
+                "parameters": [
+                    {
+                        "description": "Exercice à créer",
+                        "name": "exercice",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ExerciceInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Exercice"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/exercices/{id}": {
+            "get": {
+                "description": "Retourne les informations d’un exercice par son ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercices"
+                ],
+                "summary": "Détail d’un exercice",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de l’exercice",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Exercice"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Met à jour un exercice existant",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercices"
+                ],
+                "summary": "Modifier un exercice",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de l’exercice",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Champs à modifier",
+                        "name": "exercice",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ExerciceInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Exercice"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Supprime un exercice par son ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercices"
+                ],
+                "summary": "Supprimer un exercice",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de l’exercice",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/poids": {
             "get": {
                 "description": "Retourne toutes les entrées de poids enregistrées, triées par date décroissante",
@@ -205,6 +421,43 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.Exercice": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "groupe_musculaire": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "nom": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ExerciceInput": {
+            "type": "object",
+            "properties": {
+                "groupe_musculaire": {
+                    "type": "string"
+                },
+                "nom": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Poids": {
             "type": "object",
             "properties": {

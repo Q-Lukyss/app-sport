@@ -1,5 +1,29 @@
 basePath: /
 definitions:
+  models.Exercice:
+    properties:
+      created_at:
+        type: string
+      groupe_musculaire:
+        type: string
+      id:
+        type: integer
+      nom:
+        type: string
+      type:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.ExerciceInput:
+    properties:
+      groupe_musculaire:
+        type: string
+      nom:
+        type: string
+      type:
+        type: string
+    type: object
   models.Poids:
     properties:
       createdAt:
@@ -41,6 +65,149 @@ info:
   title: API App-Sport
   version: "1.0"
 paths:
+  /exercices:
+    get:
+      description: Retourne tous les exercices disponibles
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Exercice'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Liste des exercices
+      tags:
+      - Exercices
+    post:
+      consumes:
+      - application/json
+      description: Ajoute un nouvel exercice dans la base
+      parameters:
+      - description: Exercice à créer
+        in: body
+        name: exercice
+        required: true
+        schema:
+          $ref: '#/definitions/models.ExerciceInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Exercice'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Créer un exercice
+      tags:
+      - Exercices
+  /exercices/{id}:
+    delete:
+      description: Supprime un exercice par son ID
+      parameters:
+      - description: ID de l’exercice
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Supprimer un exercice
+      tags:
+      - Exercices
+    get:
+      description: Retourne les informations d’un exercice par son ID
+      parameters:
+      - description: ID de l’exercice
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Exercice'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Détail d’un exercice
+      tags:
+      - Exercices
+    put:
+      consumes:
+      - application/json
+      description: Met à jour un exercice existant
+      parameters:
+      - description: ID de l’exercice
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Champs à modifier
+        in: body
+        name: exercice
+        required: true
+        schema:
+          $ref: '#/definitions/models.ExerciceInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Exercice'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Modifier un exercice
+      tags:
+      - Exercices
   /poids:
     get:
       description: Retourne toutes les entrées de poids enregistrées, triées par date
