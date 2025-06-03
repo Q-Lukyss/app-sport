@@ -58,3 +58,28 @@ swagg init
 ```
 
 la doc est dispo a /swagger/index.html
+
+## 🔄 Hot reload avec Air (optionnel)
+
+- Installer Air :  
+  `go install github.com/cosmtrek/air@latest`
+
+- Lancer en mode dev :  
+  `air` (depuis le dossier `api/`)
+
+- Config facultative : voir `.air.toml`
+
+```
+# .air.toml
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  cmd = "go build -o ./tmp/main ."
+  bin = "tmp/main"
+  include_ext = ["go", "tpl", "tmpl", "html"]
+  exclude_dir = ["assets", "tmp", "vendor"]
+
+[log]
+  time = true
+```

@@ -24,3 +24,6 @@ docker/pgdata/
 *.iml
 
 .env
+api/tmp/
+api/.air.toml
+
