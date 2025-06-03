@@ -47,3 +47,14 @@ dans /frontend
 ```
 npm run dev
 ```
+
+## Swagger et Routes API
+
+pour mettre a jour la doc swagger 
+
+dans /api
+```
+swagg init
+```
+
+la doc est dispo a /swagger/index.html

@@ -1,0 +1,15 @@
+basePath: /
+host: localhost:8020
+info:
+  contact:
+    email: quentin.lkss@gmail.com
+    name: Quentin Lachery
+  description: API de suivi de poids et séances d'entraînement
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: API App-Sport
+  version: "1.0"
+paths: {}
+swagger: "2.0"
