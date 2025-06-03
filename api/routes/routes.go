@@ -7,4 +7,5 @@ import (
 func SetupRoutes(r *gin.Engine) {
 	RegisterPoidsRoutes(r) // délégué à routes/poids.go
 	RegisterExerciceRoutes(r)
+	RegisterSeanceRoutes(r)
 }
