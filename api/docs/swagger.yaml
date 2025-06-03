@@ -1,4 +1,33 @@
 basePath: /
+definitions:
+  models.Poids:
+    properties:
+      createdAt:
+        type: string
+      date:
+        type: string
+      id:
+        type: integer
+      updatedAt:
+        type: string
+      valeur:
+        description: en kg
+        type: number
+    type: object
+  models.PoidsInput:
+    properties:
+      date:
+        description: format YYYY-MM-DD
+        type: string
+      valeur:
+        description: en kg
+        type: number
+    type: object
+  models.PoidsUpdate:
+    properties:
+      valeur:
+        type: number
+    type: object
 host: localhost:8020
 info:
   contact:
@@ -11,5 +40,125 @@ info:
   termsOfService: http://swagger.io/terms/
   title: API App-Sport
   version: "1.0"
-paths: {}
+paths:
+  /poids:
+    get:
+      description: Retourne toutes les entrées de poids enregistrées, triées par date
+        décroissante
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Poids'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Liste des poids
+      tags:
+      - Poids
+    post:
+      consumes:
+      - application/json
+      description: Enregistre une nouvelle valeur de poids pour une date donnée
+      parameters:
+      - description: Poids à enregistrer
+        in: body
+        name: poids
+        required: true
+        schema:
+          $ref: '#/definitions/models.PoidsInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Poids'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Créer une entrée de poids
+      tags:
+      - Poids
+  /poids/{id}:
+    delete:
+      description: Supprime une entrée de poids par son ID
+      parameters:
+      - description: ID de l'entrée poids
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Supprimer une entrée poids
+      tags:
+      - Poids
+    put:
+      consumes:
+      - application/json
+      description: Met à jour la valeur du poids pour une entrée donnée
+      parameters:
+      - description: ID de l'entrée poids
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Nouvelle valeur du poids
+        in: body
+        name: poids
+        required: true
+        schema:
+          $ref: '#/definitions/models.PoidsUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Poids'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Modifier un poids existant
+      tags:
+      - Poids
 swagger: "2.0"

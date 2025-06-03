@@ -16,5 +16,230 @@
     },
     "host": "localhost:8020",
     "basePath": "/",
-    "paths": {}
+    "paths": {
+        "/poids": {
+            "get": {
+                "description": "Retourne toutes les entrées de poids enregistrées, triées par date décroissante",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Poids"
+                ],
+                "summary": "Liste des poids",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Poids"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Enregistre une nouvelle valeur de poids pour une date donnée",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Poids"
+                ],
+                "summary": "Créer une entrée de poids",
+                "parameters": [
+                    {
+                        "description": "Poids à enregistrer",
+                        "name": "poids",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.PoidsInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Poids"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/poids/{id}": {
+            "put": {
+                "description": "Met à jour la valeur du poids pour une entrée donnée",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Poids"
+                ],
+                "summary": "Modifier un poids existant",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de l'entrée poids",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Nouvelle valeur du poids",
+                        "name": "poids",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.PoidsUpdate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Poids"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Supprime une entrée de poids par son ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Poids"
+                ],
+                "summary": "Supprimer une entrée poids",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de l'entrée poids",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.Poids": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "valeur": {
+                    "description": "en kg",
+                    "type": "number"
+                }
+            }
+        },
+        "models.PoidsInput": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "description": "format YYYY-MM-DD",
+                    "type": "string"
+                },
+                "valeur": {
+                    "description": "en kg",
+                    "type": "number"
+                }
+            }
+        },
+        "models.PoidsUpdate": {
+            "type": "object",
+            "properties": {
+                "valeur": {
+                    "type": "number"
+                }
+            }
+        }
+    }
 }
