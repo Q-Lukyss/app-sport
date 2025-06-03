@@ -23,6 +23,104 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/exercice-realise/{id}": {
+            "put": {
+                "description": "Met à jour les données d’un exercice réalisé",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercices Réalisés"
+                ],
+                "summary": "Modifier un exercice réalisé",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de l'exercice réalisé",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Données à modifier",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ExerciceRealiseInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ExerciceRealise"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Supprime une entrée exercice réalisé par son ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercices Réalisés"
+                ],
+                "summary": "Supprimer un exercice réalisé",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de l'exercice réalisé",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/exercices": {
             "get": {
                 "description": "Retourne tous les exercices disponibles",
@@ -634,6 +732,104 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/seances/{id}/exercices": {
+            "get": {
+                "description": "Retourne tous les exercices associés à une séance",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercices Réalisés"
+                ],
+                "summary": "Liste des exercices réalisés pour une séance",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de la séance",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ExerciceRealise"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Ajoute un exercice avec ses performances à une séance existante",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Exercices Réalisés"
+                ],
+                "summary": "Ajouter un exercice réalisé à une séance",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID de la séance",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Détails de l'exercice",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ExerciceRealiseInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.ExerciceRealise"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -671,6 +867,67 @@ const docTemplate = `{
                 },
                 "type": {
                     "type": "string"
+                }
+            }
+        },
+        "models.ExerciceRealise": {
+            "type": "object",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "exercice": {
+                    "$ref": "#/definitions/models.Exercice"
+                },
+                "exercice_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "ordre": {
+                    "type": "integer"
+                },
+                "poids": {
+                    "type": "number"
+                },
+                "reps": {
+                    "type": "integer"
+                },
+                "rpe": {
+                    "type": "number"
+                },
+                "seance_id": {
+                    "type": "integer"
+                },
+                "series": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.ExerciceRealiseInput": {
+            "type": "object",
+            "properties": {
+                "comment": {
+                    "type": "string"
+                },
+                "exercice_id": {
+                    "type": "integer"
+                },
+                "ordre": {
+                    "type": "integer"
+                },
+                "poids": {
+                    "type": "number"
+                },
+                "reps": {
+                    "type": "integer"
+                },
+                "rpe": {
+                    "type": "number"
+                },
+                "series": {
+                    "type": "integer"
                 }
             }
         },

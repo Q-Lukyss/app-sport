@@ -29,19 +29,14 @@ func main() {
 	config.LoadEnv()
 	config.ConnectDB()
 
-	errPoids := config.DB.AutoMigrate(&models.Poids{})
-	if errPoids != nil {
-		log.Println("Une erreur de Migration s'est produite avec Poids")
-	}
-
-	errExercice := config.DB.AutoMigrate(&models.Exercice{})
-	if errExercice != nil {
-		log.Println("Une erreur de Migration s'est produite avec Exercice")
-	}
-
-	errSeance := config.DB.AutoMigrate(&models.Seance{})
-	if errSeance != nil {
-		log.Println("Une erreur de Migration s'est produite avec Seance")
+	err := config.DB.AutoMigrate(
+		&models.Poids{},
+		&models.Exercice{},
+		&models.Seance{},
+		&models.ExerciceRealise{},
+	)
+	if err != nil {
+		log.Println("Une erreur de Migration s'est produite")
 	}
 
 	r := gin.Default()

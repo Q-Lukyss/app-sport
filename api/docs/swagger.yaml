@@ -24,6 +24,46 @@ definitions:
       type:
         type: string
     type: object
+  models.ExerciceRealise:
+    properties:
+      comment:
+        type: string
+      exercice:
+        $ref: '#/definitions/models.Exercice'
+      exercice_id:
+        type: integer
+      id:
+        type: integer
+      ordre:
+        type: integer
+      poids:
+        type: number
+      reps:
+        type: integer
+      rpe:
+        type: number
+      seance_id:
+        type: integer
+      series:
+        type: integer
+    type: object
+  models.ExerciceRealiseInput:
+    properties:
+      comment:
+        type: string
+      exercice_id:
+        type: integer
+      ordre:
+        type: integer
+      poids:
+        type: number
+      reps:
+        type: integer
+      rpe:
+        type: number
+      series:
+        type: integer
+    type: object
   models.Poids:
     properties:
       createdAt:
@@ -94,6 +134,71 @@ info:
   title: API App-Sport
   version: "1.0"
 paths:
+  /exercice-realise/{id}:
+    delete:
+      description: Supprime une entrée exercice réalisé par son ID
+      parameters:
+      - description: ID de l'exercice réalisé
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Supprimer un exercice réalisé
+      tags:
+      - Exercices Réalisés
+    put:
+      consumes:
+      - application/json
+      description: Met à jour les données d’un exercice réalisé
+      parameters:
+      - description: ID de l'exercice réalisé
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Données à modifier
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.ExerciceRealiseInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ExerciceRealise'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Modifier un exercice réalisé
+      tags:
+      - Exercices Réalisés
   /exercices:
     get:
       description: Retourne tous les exercices disponibles
@@ -500,4 +605,69 @@ paths:
       summary: Modifier une séance
       tags:
       - Séances
+  /seances/{id}/exercices:
+    get:
+      description: Retourne tous les exercices associés à une séance
+      parameters:
+      - description: ID de la séance
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ExerciceRealise'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Liste des exercices réalisés pour une séance
+      tags:
+      - Exercices Réalisés
+    post:
+      consumes:
+      - application/json
+      description: Ajoute un exercice avec ses performances à une séance existante
+      parameters:
+      - description: ID de la séance
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Détails de l'exercice
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.ExerciceRealiseInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.ExerciceRealise'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Ajouter un exercice réalisé à une séance
+      tags:
+      - Exercices Réalisés
 swagger: "2.0"
