@@ -593,6 +593,88 @@
                 }
             }
         },
+        "/seances/by-date": {
+            "get": {
+                "description": "Récupère toutes les séances pour une date spécifique",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Séances"
+                ],
+                "summary": "Séances par date",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Date au format YYYY-MM-DD",
+                        "name": "date",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Seance"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/seances/today": {
+            "get": {
+                "description": "Récupère toutes les séances prévues pour la date du jour",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Séances"
+                ],
+                "summary": "Séances du jour",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Seance"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/seances/{id}": {
             "get": {
                 "description": "Retourne une séance par son ID",
@@ -971,21 +1053,24 @@
             "type": "object",
             "properties": {
                 "comment": {
-                    "description": "facultatif",
                     "type": "string"
                 },
                 "created_at": {
                     "type": "string"
                 },
                 "date": {
-                    "description": "jour de la séance",
                     "type": "string"
+                },
+                "exercices_realises": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ExerciceRealise"
+                    }
                 },
                 "id": {
                     "type": "integer"
                 },
                 "type": {
-                    "description": "muscu, natation, cardio...",
                     "type": "string"
                 },
                 "updated_at": {
@@ -1000,11 +1085,11 @@
                     "type": "string"
                 },
                 "date": {
-                    "description": "\"YYYY-MM-DD\"",
+                    "description": "Format YYYY-MM-DD",
                     "type": "string"
                 },
                 "type": {
-                    "description": "muscu, piscine, etc.",
+                    "description": "Muscu, natation, etc.",
                     "type": "string"
                 }
             }

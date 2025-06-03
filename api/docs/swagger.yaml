@@ -95,17 +95,18 @@ definitions:
   models.Seance:
     properties:
       comment:
-        description: facultatif
         type: string
       created_at:
         type: string
       date:
-        description: jour de la séance
         type: string
+      exercices_realises:
+        items:
+          $ref: '#/definitions/models.ExerciceRealise'
+        type: array
       id:
         type: integer
       type:
-        description: muscu, natation, cardio...
         type: string
       updated_at:
         type: string
@@ -115,10 +116,10 @@ definitions:
       comment:
         type: string
       date:
-        description: '"YYYY-MM-DD"'
+        description: Format YYYY-MM-DD
         type: string
       type:
-        description: muscu, piscine, etc.
+        description: Muscu, natation, etc.
         type: string
     type: object
 host: localhost:8020
@@ -670,4 +671,58 @@ paths:
       summary: Ajouter un exercice réalisé à une séance
       tags:
       - Exercices Réalisés
+  /seances/by-date:
+    get:
+      description: Récupère toutes les séances pour une date spécifique
+      parameters:
+      - description: Date au format YYYY-MM-DD
+        in: query
+        name: date
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Seance'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Séances par date
+      tags:
+      - Séances
+  /seances/today:
+    get:
+      description: Récupère toutes les séances prévues pour la date du jour
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Seance'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Séances du jour
+      tags:
+      - Séances
 swagger: "2.0"

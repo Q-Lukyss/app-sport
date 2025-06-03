@@ -79,6 +79,57 @@ func GetSeanceById(c *gin.Context) {
 	c.JSON(http.StatusOK, seance)
 }
 
+// GetSeancesToday godoc
+// @Summary Séances du jour
+// @Description Récupère toutes les séances prévues pour la date du jour
+// @Tags Séances
+// @Produce json
+// @Success 200 {array} models.Seance
+// @Failure 500 {object} map[string]string
+// @Router /seances/today [get]
+func GetSeancesToday(c *gin.Context) {
+	today := time.Now().Format("2006-01-02")
+
+	var seances []models.Seance
+	if err := config.DB.Where("date = ?", today).Preload("ExercicesRealises").Preload("ExercicesRealises.Exercice").Find(&seances).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, seances)
+}
+
+// GetSeancesByDate godoc
+// @Summary Séances par date
+// @Description Récupère toutes les séances pour une date spécifique
+// @Tags Séances
+// @Produce json
+// @Param date query string true "Date au format YYYY-MM-DD"
+// @Success 200 {array} models.Seance
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /seances/by-date [get]
+func GetSeancesByDate(c *gin.Context) {
+	dateStr := c.Query("date")
+	if dateStr == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Paramètre 'date' requis (YYYY-MM-DD)"})
+		return
+	}
+
+	date, err := time.Parse("2006-01-02", dateStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Format de date invalide. Utilisez YYYY-MM-DD"})
+		return
+	}
+
+	var seances []models.Seance
+	if err := config.DB.Where("date = ?", date).Preload("ExercicesRealises").Preload("ExercicesRealises.Exercice").Find(&seances).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, seances)
+}
+
 // UpdateSeance godoc
 // @Summary Modifier une séance
 // @Description Met à jour une séance existante
