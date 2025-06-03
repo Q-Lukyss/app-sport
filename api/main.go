@@ -29,18 +29,17 @@ func main() {
 	config.LoadEnv()
 	config.ConnectDB()
 
-	err := config.DB.AutoMigrate(&models.Poids{})
-	if err != nil {
-		log.Println("Une erreur de Migration s'est produite")
+	errPoids := config.DB.AutoMigrate(&models.Poids{})
+	if errPoids != nil {
+		log.Println("Une erreur de Migration s'est produite avec poids")
+	}
+
+	errExercice := config.DB.AutoMigrate(&models.Exercice{})
+	if errExercice != nil {
+		log.Println("Une erreur de Migration s'est produite avec exercice")
 	}
 
 	r := gin.Default()
-
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
 
 	log.Println("✅ Serveur démarré sur le port 8020")
 
